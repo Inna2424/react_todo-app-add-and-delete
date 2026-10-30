@@ -8,7 +8,7 @@ export const getTodos = () => {
 };
 
 export const postTodos = (data: Omit<Todo, 'id'>) => {
-  return client.post<Todo>(`/todos?userId=${USER_ID}`, data);
+  return client.post<Todo>(`/todos`, data);
 };
 
 export const patchTodos = () => {

@@ -1,45 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 
 interface Props {
-  onSubmit?: (title: string) => void;
-  onAdd?: (title: string) => void;
-  addTodo?: (title: string) => void;
-  // title: string;
-  // // setTitle: Dispatch<SetStateAction<string>>;
+  title: string;
+  setTitle: (text: string) => void;
+  onSubmit: () => void;
   isLoading?: boolean;
+  inputRef: React.RefObject<HTMLInputElement>;
 }
 
 export const TodoForm: React.FC<Props> = ({
+  title,
+  setTitle,
   onSubmit,
-  onAdd,
-  addTodo,
-  // title,
-  // setTitle,
   isLoading = false,
+  inputRef,
 }) => {
-  const [title, setTitle] = useState('');
-  const titileField = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
-    if (titileField.current) {
-      titileField.current.focus();
+    if (!isLoading) {
+      inputRef.current?.focus();
     }
-  }, []);
+  }, [isLoading, inputRef]);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const trimmed = title.trim();
-
-    if (onSubmit) {
-      await onSubmit(trimmed);
-    } else if (onAdd) {
-      await onAdd(trimmed);
-    } else if (addTodo) {
-      await addTodo(trimmed);
-    }
-
-    setTitle('');
+    onSubmit();
   };
 
   return (
@@ -49,7 +33,7 @@ export const TodoForm: React.FC<Props> = ({
         type="text"
         className="todoapp__new-todo"
         placeholder="What needs to be done?"
-        ref={titileField}
+        ref={inputRef}
         value={title}
         disabled={isLoading}
         onChange={e => setTitle(e.target.value)}
